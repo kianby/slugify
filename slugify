@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 #: Name        : slugify
 #: Date        : 2012-05-01
 #: Author      : "Benjamin Linton" <developer@benlinton.com>
@@ -15,10 +15,11 @@ ignore_case=0
 dry_run=0
 dashes_to_spaces=0
 underscores_to_spaces=0
+remove_accents=0
 verbose=0
 
 ## Initialize valid options
-opt_string=acdhintuv
+opt_string=acdhinturv
 
 ## Usage function
 function print_usage(){
@@ -31,6 +32,7 @@ function print_usage(){
   echo "   -n: dry run"
   echo "   -t: treat existing dashes as spaces"
   echo "   -u: treat existing underscores as spaces (useful with -a, -c, or -d)"
+  echo "   -r: remove accents (é -> e, ë -> e, ...)"
   echo "   -v: verbose"
 }
 
@@ -46,6 +48,7 @@ do
     n) dry_run=1 ;;
     t) dashes_to_spaces=1 ;;
     u) underscores_to_spaces=1 ;;
+    r) remove_accents=1 ;;
     v) verbose=1 ;;
     *) exit 1 ;;
   esac
@@ -115,6 +118,23 @@ for source in "$@"; do
 
   ## Replace spaces with underscores or dashes
   target=$(echo "$target" | tr ' ' "$space_replace_char")
+
+  if [ $remove_accents -eq 1 ]; then
+    target=$(echo "$target" | sed 's/é/e/')
+    target=$(echo "$target" | sed 's/è/e/')
+    target=$(echo "$target" | sed 's/ê/e/')
+    target=$(echo "$target" | sed 's/ê/e/')
+    target=$(echo "$target" | sed 's/ë/e/')
+    target=$(echo "$target" | sed 's/à/a/')
+    target=$(echo "$target" | sed 's/â/a/')
+    target=$(echo "$target" | sed 's/ï/i/')
+    target=$(echo "$target" | sed 's/î/i/')
+    target=$(echo "$target" | sed 's/ô/o/')
+    target=$(echo "$target" | sed 's/ö/o/')
+    target=$(echo "$target" | sed 's/ç/c/')
+    target=$(echo "$target" | sed 's/ù/u/')
+    target=$(echo "$target" | sed 's/û/u/')
+  fi
 
   ## Handle moving the source to target
   if [ "$target" == "$source" ]; then

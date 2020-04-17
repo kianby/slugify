@@ -16,6 +16,7 @@ Simply enter the slugify command without any arguments or with the -h option to 
        -n: dry run
        -t: treat existing dashes as spaces
        -u: treat existing underscores as spaces (useful with -a, -c, or -d)
+       -r: remove accents (é -> e, ë -> e, ...)
        -v: verbose
 
 ## Usage Examples
